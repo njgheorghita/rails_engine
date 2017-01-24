@@ -5,7 +5,8 @@ class CreateInvoices < ActiveRecord::Migration[5.0]
       t.integer :merchant_id
       t.string  :status
 
-      t.timestamps
+      t.datetime  :created_at
+      t.datetime  :updated_at
     end
   end
 end

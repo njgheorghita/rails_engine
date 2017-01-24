@@ -17,15 +17,28 @@ describe "Invoices API" do
     expect(invoice["id"]).to be_a(Integer)
   end
 
-  xit "returns a single invoice by id" do
-    create(:invoice)
+  it "returns a single invoice by id in JSON" do
+    create_list(:invoice, 3)
+    test_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
-    get "/api/v1/invoices/#{id}.json"
+    get "/api/v1/invoices/#{test_invoice.id}.json"
 
     invoice = JSON.parse(response.body)
 
-    expect(response).to be_success
-    expect(invoice["id"]).to eq(id)
+    expect(response).to       be_success
+    expect(invoice["id"]).to  eq(test_invoice.id)
+  end
+
+  it "finds and returns a single invoice by id" do
+    create_list(:invoice, 3)
+    test_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/invoices/find?id=#{test_invoice.id}.json"
+
+    invoice = JSON.parse(response.body)
+
+    expect(response).to       be_success
+    expect(invoice["id"]).to  eq(test_invoice.id)
   end
 
 end
