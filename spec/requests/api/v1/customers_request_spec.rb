@@ -28,4 +28,16 @@ describe "Customers API" do
     expect(customer["id"]).to eq(id)
   end
 
+  it "finds and returns a single customer by id" do
+    customer = create(:customer)
+
+    get "/api/v1/customers/find?id=#{customer.id}"
+
+    customer = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(customer).to be_a(Hash)
+    expect(customer["id"]).to eq(Customer.first.id)
+  end
+
 end
