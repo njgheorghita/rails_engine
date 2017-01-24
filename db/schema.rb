@@ -18,22 +18,23 @@ ActiveRecord::Schema.define(version: 20170124061511) do
   create_table "customers", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "merchants", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "transactions", force: :cascade do |t|
     t.integer  "invoice_id"
     t.string   "credit_card_number"
+    t.string   "credit_card_expiration_date"
     t.string   "result"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["invoice_id"], name: "index_transactions_on_invoice_id", using: :btree
   end
 
