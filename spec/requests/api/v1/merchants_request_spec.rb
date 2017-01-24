@@ -46,43 +46,47 @@ describe "Merchants API" do
   end
 
   it "finds and returns a single merchant by name" do
-    merchant = create(:merchant)
+    create_list(:merchant, 3)
+    merchant = Merchant.create(name:"George", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find?name=#{merchant.name}"
 
-    merchant = JSON.parse(response.body)
+    merchant_return = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(merchant).to be_a(Hash)
-    expect(merchant["name"]).to eq(Merchant.first.name)
+    expect(merchant_return).to be_a(Hash)
+    expect(merchant_return["name"]).to eq(merchant.name)
   end
 
   it "finds and returns a single merchant by created_at" do
-    merchant = create(:merchant)
+    create_list(:merchant, 3)
+    merchant = Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find?created_at=#{merchant.created_at}"
-    merchant = JSON.parse(response.body)
+    merchant_return = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(merchant).to be_a(Hash)
-    expect(merchant["created_at"]).to eq(merchant.created_at.to_json.gsub("\"",""))
+    expect(merchant_return).to be_a(Hash)
+    expect(merchant_return["name"]).to eq(merchant.name)
   end
 
-  xit "finds and returns a single merchant by updated_at" do
-    merchant = create(:merchant)
+  it "finds and returns a single merchant by updated_at" do
+    create_list(:merchant, 3)
+    merchant = Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2014-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find?updated_at=#{merchant.updated_at}"
 
-    merchant = JSON.parse(response.body)
+    merchant_return = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(merchant).to be_a(Hash)
-    expect(merchant["updated_at"]).to eq(Merchant.first.created_at)
+    expect(merchant_return).to be_a(Hash)
+    expect(merchant_return["name"]).to eq(merchant.name)
   end
 
 
   it "finds and returns all merchants by id" do
     merchants = create_list(:merchant, 3)
+    merchant = Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2014-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find_all?id=#{merchants.first.id}"
 
@@ -99,6 +103,7 @@ describe "Merchants API" do
 
   it "finds and returns all merchants by name" do
     merchants = create_list(:merchant, 3)
+    merchant = Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2014-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find_all?name=#{merchants.first.name}"
 
@@ -113,8 +118,9 @@ describe "Merchants API" do
     end
   end
 
-  xit "finds and returns all merchants by created_at" do
+  it "finds and returns all merchants by created_at" do
     merchants = create_list(:merchant, 3)
+    Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2014-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find_all?created_at=#{merchants.first.created_at}"
 
@@ -125,12 +131,13 @@ describe "Merchants API" do
     expect(all_merchants.count).to eq(3)
 
     all_merchants.each do |merchant|
-      expect(merchant["created_at"]).to eq(merchants.first.created_at)
+      expect(merchant["name"]).to eq(merchants.first.name)
     end
   end
 
-  xit "finds and returns all merchants by updated_at" do
+  it "finds and returns all merchants by updated_at" do
     merchants = create_list(:merchant, 3)
+    Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2014-03-25 09:54:09 UTC")
 
     get "/api/v1/merchants/find_all?updated_at=#{merchants.first.updated_at}"
 
@@ -141,7 +148,7 @@ describe "Merchants API" do
     expect(all_merchants.count).to eq(3)
 
     all_merchants.each do |merchant|
-      expect(merchant["updated_at"]).to eq(merchants.first.updated_at)
+      expect(merchant["name"]).to eq(merchants.first.name)
     end
   end
 
@@ -155,6 +162,18 @@ describe "Merchants API" do
 
     expect(response).to be_success
     expect(merchant_ids).to include(merchant["id"])
+  end
+
+  it "searches case insensitively" do
+    merchant = Merchant.create(name:"GEORGE", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/merchants/find?name=george"
+
+    merchant_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant_return).to be_a(Hash)
+    expect(merchant_return["name"]).to eq(merchant.name)
   end
 
 end
