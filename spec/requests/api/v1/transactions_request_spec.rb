@@ -36,4 +36,16 @@ describe "Transactions API" do
     expect(response).to be_success
     expect(transaction["id"]).to eq(id)
   end
+
+  it "finds and returns a single transaction by id" do
+    transaction = create(:transaction)
+
+    get "/api/v1/transactions/find?id=#{transaction.id}"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(transaction).to be_a(Hash)
+    expect(transaction["id"]).to eq(Transaction.first.id)
+  end
 end
