@@ -15,13 +15,11 @@ describe "Merchants API" do
 
     expect(merchant).to have_key("id")
     expect(merchant).to have_key("name")
-    expect(merchant).to have_key("created_at")
-    expect(merchant).to have_key("updated_at")
+    expect(merchant).to_not have_key("created_at")
+    expect(merchant).to_not have_key("updated_at")
 
     expect(merchant["id"]).to be_a(Integer)
     expect(merchant["name"]).to be_a(String)
-    expect(merchant["created_at"]).to be_a(String)
-    expect(merchant["updated_at"]).to be_a(String)
   end
 
   it "returns a single merchant by id" do
