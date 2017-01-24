@@ -36,4 +36,45 @@ describe "Transactions API" do
     expect(response).to be_success
     expect(transaction["id"]).to eq(id)
   end
+
+  it "finds and returns a single transaction by id" do
+    transaction = create(:transaction)
+
+    get "/api/v1/transactions/find?id=#{transaction.id}"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(transaction).to be_a(Hash)
+    expect(transaction["id"]).to eq(Transaction.first.id)
+  end
+
+  it "finds and returns all transactions by id" do
+    transactions = create_list(:transaction, 3)
+
+    get "/api/v1/transactions/find_all?id=#{transactions.first.id}"
+
+    all_transactions = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_transactions).to be_a(Array)
+    expect(all_transactions.count).to eq(1)
+
+    all_transactions.each do |transaction|
+      expect(transaction["id"]).to eq(transactions.first.id)
+    end
+  end
+
+  it "finds and returns a random transaction" do
+    create_list(:transaction, 3)
+
+    get "/api/v1/transactions/random"
+
+    transaction = JSON.parse(response.body)
+    transactions_ids = Transaction.all.map { |transaction| transaction.id }
+
+    expect(response).to be_success
+    expect(transactions_ids).to include(transaction["id"])
+  end
+
 end
