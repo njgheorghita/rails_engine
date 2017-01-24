@@ -43,8 +43,43 @@ describe "Merchants API" do
     expect(response).to be_success
     expect(merchant).to be_a(Hash)
     expect(merchant["id"]).to eq(Merchant.first.id)
+  end
+
+  it "finds and returns a single merchant by name" do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/find?name=#{merchant.name}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant).to be_a(Hash)
     expect(merchant["name"]).to eq(Merchant.first.name)
   end
+
+  it "finds and returns a single merchant by created_at" do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/find?created_at=#{merchant.created_at}"
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant).to be_a(Hash)
+    expect(merchant["created_at"]).to eq(merchant.created_at.to_json.gsub("\"",""))
+  end
+
+  xit "finds and returns a single merchant by updated_at" do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/find?updated_at=#{merchant.updated_at}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant).to be_a(Hash)
+    expect(merchant["updated_at"]).to eq(Merchant.first.created_at)
+  end
+
 
   it "finds and returns all merchants by id" do
     merchants = create_list(:merchant, 3)
@@ -59,6 +94,54 @@ describe "Merchants API" do
 
     all_merchants.each do |merchant|
       expect(merchant["id"]).to eq(merchants.first.id)
+    end
+  end
+
+  it "finds and returns all merchants by name" do
+    merchants = create_list(:merchant, 3)
+
+    get "/api/v1/merchants/find_all?name=#{merchants.first.name}"
+
+    all_merchants = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_merchants).to be_a(Array)
+    expect(all_merchants.count).to eq(3)
+
+    all_merchants.each do |merchant|
+      expect(merchant["name"]).to eq(merchants.first.name)
+    end
+  end
+
+  xit "finds and returns all merchants by created_at" do
+    merchants = create_list(:merchant, 3)
+
+    get "/api/v1/merchants/find_all?created_at=#{merchants.first.created_at}"
+
+    all_merchants = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_merchants).to be_a(Array)
+    expect(all_merchants.count).to eq(3)
+
+    all_merchants.each do |merchant|
+      expect(merchant["created_at"]).to eq(merchants.first.created_at)
+    end
+  end
+
+  xit "finds and returns all merchants by updated_at" do
+    merchants = create_list(:merchant, 3)
+
+    get "/api/v1/merchants/find_all?updated_at=#{merchants.first.updated_at}"
+
+    all_merchants = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_merchants).to be_a(Array)
+    expect(all_merchants.count).to eq(3)
+
+    all_merchants.each do |merchant|
+      expect(merchant["updated_at"]).to eq(merchants.first.updated_at)
     end
   end
 
