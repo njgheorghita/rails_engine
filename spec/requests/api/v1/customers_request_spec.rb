@@ -56,4 +56,16 @@ describe "Customers API" do
     end
   end
 
+  it "finds and returns a random customer" do
+    create_list(:customer, 3)
+
+    get "/api/v1/customers/random"
+
+    customer = JSON.parse(response.body)
+    customers_ids = Customer.all.map { |customer| customer.id }
+
+    expect(response).to be_success
+    expect(customers_ids).to include(customer["id"])
+  end
+
 end
