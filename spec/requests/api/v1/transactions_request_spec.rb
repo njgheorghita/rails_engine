@@ -65,4 +65,16 @@ describe "Transactions API" do
     end
   end
 
+  it "finds and returns a random transaction" do
+    create_list(:transaction, 3)
+
+    get "/api/v1/transactions/random"
+
+    transaction = JSON.parse(response.body)
+    transactions_ids = Transaction.all.map { |transaction| transaction.id }
+
+    expect(response).to be_success
+    expect(transactions_ids).to include(transaction["id"])
+  end
+
 end
