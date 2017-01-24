@@ -26,13 +26,24 @@ Rails.application.routes.draw do
 
       namespace :invoices do
         get 'find',     to: 'query#show'
+        get 'find_all', to: 'query#index'
+        get 'random',   to: 'random#show'
       end
       resources :invoices, only: [:index, :show]
 
       namespace :items do
-
+        get 'find',     to: 'query#show'
+        get 'find_all', to: 'query#index'
+        get 'random',   to: 'random#show'
       end
       resources :items, only: [:index, :show]
+
+      namespace :invoice_items do
+        get 'find',     to: 'query#show'
+        get 'find_all', to: 'query#index'
+        get 'random',   to: 'random#show'
+      end
+      resources :invoice_items, only: [:index, :show]
     end
   end
 

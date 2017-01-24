@@ -10,6 +10,6 @@ class Api::V1::Invoices::QueryController < ApplicationController
   private
 
   def invoice_params
-    params.permit(:id, :name, :created_at, :updated_at)
+    params.permit(:id, :customer_id, :merchant_id, :status, :created_at, :updated_at)
   end
 end

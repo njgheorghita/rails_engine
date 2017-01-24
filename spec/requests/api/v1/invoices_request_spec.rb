@@ -41,4 +41,32 @@ describe "Invoices API" do
     expect(invoice["id"]).to  eq(test_invoice.id)
   end
 
+  it "finds and returns all invoice by id" do
+    test_invoice = create_list(:invoice, 3)
+
+    get "/api/v1/invoices/find_all?id=#{test_invoice.first.id}"
+
+    all_invoices = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_invoices).to be_a(Array)
+    expect(all_invoices.count).to eq(1)
+
+    all_invoices.each do |invoice|
+      expect(invoice["id"]).to eq(test_invoice.first.id)
+    end
+  end
+
+  it "finds and returns a random invoice" do
+    create_list(:invoice, 3)
+
+    get "/api/v1/invoices/random"
+
+    invoice = JSON.parse(response.body)
+    invoice_ids = Invoice.all.map { |invoice| invoice.id }
+
+    expect(response).to be_success
+    expect(invoice_ids).to include(invoice["id"])
+  end
+
 end
