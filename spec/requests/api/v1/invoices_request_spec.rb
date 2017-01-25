@@ -105,10 +105,10 @@ describe "Invoices API" do
 
   it "returns a collection of associated items" do
     invoice = Invoice.create(customer_id:22, merchant_id:32, status:"shipped", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    invoice_item = InvoiceItem.create(item_id: item_1.id, invoice_id: invoice.id, quantity: 9, unit_price:533, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     item_1 = Item.create(name: "awesome", description: "thing", unit_price:22, merchant_id:32, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     item_2 = Item.create(name: "awesome", description: "thing", unit_price:22, merchant_id:32, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     item_3 = Item.create(name: "awesome", description: "thing", unit_price:22, merchant_id:32, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    invoice_item = InvoiceItem.create(item_id: item_1.id, invoice_id: invoice.id, quantity: 9, unit_price:533, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
     get "/api/v1/invoices/#{invoice.id}/items.json"
 
@@ -118,10 +118,9 @@ describe "Invoices API" do
     expect(items_return).to be_a(Array)
     expect(items_return.length).to eq(1)
     expect(items_return.first["id"]).to eq(item_1.id)
-    expect(items_return.second["id"]).to eq(item_2.id)
   end
 
-  it "returns the associated customer" do
+  it "returns the customer associated with a single invoice" do
     customer = Customer.create(first_name:"Georgy", last_name:"Porgy", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     invoice = Invoice.create(customer_id: customer.id, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
@@ -131,8 +130,7 @@ describe "Invoices API" do
 
     expect(response).to be_success
     expect(customer_return).to be_a(Hash)
-    expect(customer_return["id"]).to eq(invoice.id)
-    expect(customer_return["customer_id"]).to eq(invoice.customer_id)
+    expect(customer_return["id"]).to eq(customer.id)
     expect(customer_return["first_name"]).to eq(customer.first_name)
     expect(customer_return["last_name"]).to eq(customer.last_name)
   end
