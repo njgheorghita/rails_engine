@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20170124205413) do
     t.integer  "invoice_id"
     t.string   "credit_card_number"
     t.string   "credit_card_expiration_date"
-    t.string   "result"
+    t.citext   "result"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["invoice_id"], name: "index_transactions_on_invoice_id", using: :btree
