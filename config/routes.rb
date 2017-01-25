@@ -4,16 +4,19 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       namespace :merchants do
-        get 'find',     to: 'query#show'
-        get 'find_all', to: 'query#index'
-        get 'random',   to: 'random#show'
+        get 'find',           to: 'query#show'
+        get 'find_all',       to: 'query#index'
+        get 'random',         to: 'random#show'
+        get ':id/items',      to: 'items#index'
+        get ':id/invoices',   to: 'invoices#index'
       end
       resources :merchants, only: [:index, :show]
 
       namespace :transactions do
-        get 'find',     to: 'query#show'
-        get 'find_all', to: 'query#index'
-        get 'random',   to: 'random#show'
+        get 'find',         to: 'query#show'
+        get 'find_all',     to: 'query#index'
+        get 'random',       to: 'random#show'
+        get ':id/invoice',  to: 'invoice#show'
       end
       resources :transactions, only: [:index, :show]
 
@@ -21,6 +24,8 @@ Rails.application.routes.draw do
         get 'find',     to: 'query#show'
         get 'find_all', to: 'query#index'
         get 'random',   to: 'random#show'
+        get ':id/invoices', to: 'invoices#index'
+        get ':id/transactions', to: 'transactions#index'
       end
       resources :customers, only: [:index, :show]
 

@@ -215,13 +215,42 @@ describe "Customers API" do
   xit "searches customer last name case insensitively" do
     customer = Customer.create(first_name: "George", last_name: "Washington", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
-    get "/api/v1/merchants/find?last_name=WASHINGTON"
+    get "/api/v1/customers/find?last_name=WASHINGTON"
 
     customer_return = JSON.parse(response.body)
 
     expect(response).to be_success
     expect(customer_return).to be_a(Hash)
     expect(customer_return["id"]).to eq(customer.last_name)
+  end
+
+  it "returns a collection of associated invoices for a customer" do
+    customer = Customer.create(first_name: "George", last_name: "Washington", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    first_invoice = Invoice.create(customer_id:customer.id, merchant_id:2, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    second_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    third_invoice = Invoice.create(customer_id:customer.id, merchant_id:3, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/customers/#{customer.id}/invoices"
+
+    expect(response).to be_success
+    expect(response).to be_a(Array)
+    expect(response.first["merchant_id"]).to eq(2)
+    expect(response.second["merchant_id"]).to eq(3)
+  end
+
+  it "returns a collection of associated transactions for a customer" do
+    customer = Customer.create(first_name: "George", last_name: "Washington", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    first_invoice = Invoice.create(customer_id: customer.id, merchant_id:2, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    first_transaction = Transaction.create(invoice_id: first_invoice.id, credit_card_number:"9", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    second_transaction = Transaction.create(invoice_id: 7, credit_card_number:"8", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    third_transaction = Transaction.create(invoice_id: first_invoice.id, credit_card_number:"7", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/customers/#{customer.id}/transactions"
+
+    expect(response).to be_success
+    expect(response).to be_a(Array)
+    expect(response.first["credit_card_number"]).to eq(9)
+    expect(response.second["credit_card_number"]).to eq(7)
   end
 
 end
