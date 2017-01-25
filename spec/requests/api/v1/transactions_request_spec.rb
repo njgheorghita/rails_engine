@@ -22,8 +22,6 @@ describe "Transactions API" do
     expect(transaction).to_not have_key("updated_at")
 
     expect(transaction["id"]).to be_a(Integer)
-    # expect(transaction["credit_card_number"]).to be_a(String)
-    # expect(transaction["result"]).to be_a(String)
   end
 
   it "returns a single transaction by id" do
@@ -49,6 +47,59 @@ describe "Transactions API" do
     expect(transaction["id"]).to eq(Transaction.first.id)
   end
 
+  it "finds and returns a single transaction by credit_card_number" do
+    create_list(:transaction, 3)
+    transaction = Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find?credit_card_number=#{transaction.credit_card_number}"
+
+    transaction_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(transaction_return).to be_a(Hash)
+    expect(transaction_return["id"]).to eq(transaction.id)
+  end
+
+  it "finds and returns a single transaction by result" do
+    create_list(:transaction, 3)
+    transaction = Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "failed", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find?result=#{transaction.result}"
+
+    transaction_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(transaction_return).to be_a(Hash)
+    expect(transaction_return["id"]).to eq(transaction.id)
+  end
+
+  it "finds and returns a single transaction by created_at" do
+    create_list(:transaction, 3)
+    transaction = Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find?created_at=#{transaction.created_at}"
+
+    transaction_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(transaction_return).to be_a(Hash)
+    expect(transaction_return["id"]).to eq(transaction.id)
+  end
+
+  it "finds and returns a single transaction by updated_at" do
+    create_list(:transaction, 3)
+    transaction = Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find?updated_at=#{transaction.updated_at}"
+
+    transaction_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(transaction_return).to be_a(Hash)
+    expect(transaction_return["id"]).to eq(transaction.id)
+  end
+
+
   it "finds and returns all transactions by id" do
     transactions = create_list(:transaction, 3)
 
@@ -59,10 +110,58 @@ describe "Transactions API" do
     expect(response).to be_success
     expect(all_transactions).to be_a(Array)
     expect(all_transactions.count).to eq(1)
+  end
 
-    all_transactions.each do |transaction|
-      expect(transaction["id"]).to eq(transactions.first.id)
-    end
+  it "finds and returns all transactions by credit_card_number" do
+    transactions = create_list(:transaction, 3)
+    Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find_all?credit_card_number=#{transactions.first.credit_card_number}"
+
+    all_transactions = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_transactions).to be_a(Array)
+    expect(all_transactions.count).to eq(3)
+  end
+
+  it "finds and returns all transactions by result" do
+    transactions = create_list(:transaction, 3)
+    Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "failed", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find_all?result=#{transactions.first.result}"
+
+    all_transactions = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_transactions).to be_a(Array)
+    expect(all_transactions.count).to eq(3)
+  end
+
+  it "finds and returns all transactions by created_at" do
+    transactions = create_list(:transaction, 3)
+    Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find_all?created_at=#{transactions.first.created_at}"
+
+    all_transactions = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_transactions).to be_a(Array)
+    expect(all_transactions.count).to eq(3)
+  end
+
+  it "finds and returns all transactions by updated_at" do
+    transactions = create_list(:transaction, 3)
+    Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/find_all?updated_at=#{transactions.first.updated_at}"
+
+    all_transactions = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(all_transactions).to be_a(Array)
+    expect(all_transactions.count).to eq(3)
   end
 
   it "finds and returns a random transaction" do
