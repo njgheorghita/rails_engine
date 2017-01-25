@@ -13,3 +13,6 @@ class Api::V1::Merchants::QueryController < ApplicationController
     params.permit(:id, :name, :created_at, :updated_at)
   end
 end
+
+
+
