@@ -194,10 +194,18 @@ describe "Merchants API" do
 
   it "returns all invoices associated with merchant from their known orders" do
     merchant = Merchant.create(name:"GEORGE", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    first_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    first_invoice = Invoice.create(customer_id:22, merchant_id: merchant.id, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     second_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    test_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    third_invoice = Invoice.create(customer_id:22, merchant_id: merchant.id, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
+    get "/api/v1/merchants/#{merchant.id}/invoices"
 
+    invoices_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoices_return).to be_a(Array)
+    expect(invoices_return.length).to eq(2)
+    expect(invoices_return.first["id"]).to eq(first_invoice.id)
+    expect(invoices_return.second["id"]).to eq(third_invoice.id)
   end
 end
