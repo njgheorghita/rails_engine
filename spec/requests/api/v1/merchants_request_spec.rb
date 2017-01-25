@@ -175,4 +175,37 @@ describe "Merchants API" do
     expect(merchant_return["name"]).to eq(merchant.name)
   end
 
+  it "returns all items associated with a single merchant" do
+    merchant = Merchant.create(name:"GEORGE", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    first_item = Item.create(name: "awesome", description: "thing", unit_price:22, merchant_id:merchant.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    second_item = Item.create(name: "more", description: "stuff", unit_price:22, merchant_id:32, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    third_item = Item.create(name: "crazy", description: "cool", unit_price:22, merchant_id:merchant.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/merchants/#{merchant.id}/items"
+
+    items_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(items_return).to be_a(Array)
+    expect(items_return.length).to eq(2)
+    expect(items_return.first["name"]).to eq(first_item.name)
+    expect(items_return.second["name"]).to eq(third_item.name)
+  end
+
+  it "returns all invoices associated with merchant from their known orders" do
+    merchant = Merchant.create(name:"GEORGE", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    first_invoice = Invoice.create(customer_id:22, merchant_id: merchant.id, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    second_invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    third_invoice = Invoice.create(customer_id:22, merchant_id: merchant.id, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+
+    invoices_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoices_return).to be_a(Array)
+    expect(invoices_return.length).to eq(2)
+    expect(invoices_return.first["id"]).to eq(first_invoice.id)
+    expect(invoices_return.second["id"]).to eq(third_invoice.id)
+  end
 end

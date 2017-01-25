@@ -188,4 +188,18 @@ describe "Transactions API" do
   #   expect(transaction_return["id"]).to eq(transaction.name)
   # end
 
+  it "returns the invoice associated with a single transaction" do
+    invoice = Invoice.create(customer_id:22, merchant_id:32, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    transaction = Transaction.create(invoice_id: invoice.id, credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/transactions/#{transaction.id}/invoice"
+
+    expect(response).to be_success
+    expect(response).to be_a(Hash)
+    expect(response["id"]).to eq(invoice.id)
+    expect(response["customer_id"]).to eq(invoice.customer_id)
+    expect(response["merchant_id"]).to eq(invoice.merchant_id)
+    expect(response["status"]).to eq(invoice.status)
+  end
+
 end
