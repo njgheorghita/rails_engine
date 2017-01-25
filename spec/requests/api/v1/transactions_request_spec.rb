@@ -176,4 +176,16 @@ describe "Transactions API" do
     expect(transactions_ids).to include(transaction["id"])
   end
 
+  # it "searches transactions case insensitively" do
+  #   transaction = Transaction.create(credit_card_number:"9999999999999999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+  #
+  #   get "/api/v1/merchants/find?result=SUCCESS"
+  #
+  #   transaction_return = JSON.parse(response.body)
+  #
+  #   expect(response).to be_success
+  #   expect(transaction_return).to be_a(Hash)
+  #   expect(transaction_return["id"]).to eq(transaction.name)
+  # end
+
 end
