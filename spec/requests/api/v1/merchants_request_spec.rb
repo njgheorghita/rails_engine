@@ -83,7 +83,6 @@ describe "Merchants API" do
     expect(merchant_return["name"]).to eq(merchant.name)
   end
 
-
   it "finds and returns all merchants by id" do
     merchants = create_list(:merchant, 3)
     merchant = Merchant.create(name:"George", created_at: "2011-03-25 09:54:09 UTC", updated_at: "2014-03-25 09:54:09 UTC")

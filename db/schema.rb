@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 20170124205413) do
   enable_extension "citext"
 
   create_table "customers", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
+    t.citext   "first_name"
+    t.citext   "last_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
