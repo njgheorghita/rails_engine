@@ -209,10 +209,10 @@ describe "Customers API" do
     expect(response).to be_success
     expect(customer_return).to be_a(Hash)
     expect(customer_return["first_name"]).to eq(customer.first_name)
-    expect(customer_return["id"]).to eq(customer.first_name)
+    expect(customer_return["id"]).to eq(customer.id)
   end
 
-  xit "searches customer last name case insensitively" do
+  it "searches customer last name case insensitively" do
     customer = Customer.create(first_name: "George", last_name: "Washington", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
     get "/api/v1/customers/find?last_name=WASHINGTON"
@@ -221,7 +221,7 @@ describe "Customers API" do
 
     expect(response).to be_success
     expect(customer_return).to be_a(Hash)
-    expect(customer_return["id"]).to eq(customer.last_name)
+    expect(customer_return["id"]).to eq(customer.id)
   end
 
   it "returns a collection of associated invoices for a customer" do
@@ -232,10 +232,12 @@ describe "Customers API" do
 
     get "/api/v1/customers/#{customer.id}/invoices"
 
+    invoice_response = JSON.parse(response.body)
+
     expect(response).to be_success
-    expect(response).to be_a(Array)
-    expect(response.first["merchant_id"]).to eq(2)
-    expect(response.second["merchant_id"]).to eq(3)
+    expect(invoice_response).to be_a(Array)
+    expect(invoice_response.first["merchant_id"]).to eq(2)
+    expect(invoice_response.second["merchant_id"]).to eq(3)
   end
 
   it "returns a collection of associated transactions for a customer" do
@@ -247,10 +249,11 @@ describe "Customers API" do
 
     get "/api/v1/customers/#{customer.id}/transactions"
 
-    expect(response).to be_success
-    expect(response).to be_a(Array)
-    expect(response.first["credit_card_number"]).to eq(9)
-    expect(response.second["credit_card_number"]).to eq(7)
-  end
+    invoice_response = JSON.parse(response.body)
 
+    expect(response).to be_success
+    expect(invoice_response).to be_a(Array)
+    expect(invoice_response.first["credit_card_number"]).to eq("9")
+    expect(invoice_response.second["credit_card_number"]).to eq("7")
+  end
 end
