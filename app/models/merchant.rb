@@ -9,6 +9,7 @@ class Merchant < ApplicationRecord
 
   def self.top_merchants_by_revenue(quantity)
     Merchant
+
       .select("sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue, merchants.id, merchants.name")
       .joins(invoices: [:invoice_items, :transactions])
       .where("transactions.result = 'success'")
@@ -43,5 +44,13 @@ class Merchant < ApplicationRecord
       .order("total_items_sold desc")
       .limit(quantity)
   end
+
+  # def favorite_customer
+  #   customers.select("customers.*, count(invoices.customer_id) as invoice_count")
+  #     .joins(:transactions)
+  #     .merge(Transaction.successful)
+  #     .group(:id)
+  #     .order("invoice_count desc").first
+  # end
 
 end

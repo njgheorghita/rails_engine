@@ -55,7 +55,7 @@ describe 'Merchants Business Intelligence API' do
     get "/api/v1/merchants/most_items?quantity=#{quantity}"
 
     top_merchants_return = JSON.parse(response.body)
-
+  
     expect(response).to be_success
     expect(top_merchants_return).to be_a(Array)
     expect(top_merchants_return.first["id"]).to eq(@merchant_3.id)
