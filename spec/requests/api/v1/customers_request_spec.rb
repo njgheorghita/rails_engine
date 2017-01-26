@@ -253,6 +253,7 @@ describe "Customers API" do
 
     expect(response).to be_success
     expect(invoice_response).to be_a(Array)
+
     expect(invoice_response.first["credit_card_number"]).to eq("9")
     expect(invoice_response.second["credit_card_number"]).to eq("7")
   end
