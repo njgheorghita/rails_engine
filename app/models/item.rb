@@ -16,6 +16,7 @@ class Item < ApplicationRecord
     .group("items.id, items.name")
     .order("total_items_sold desc")
     .limit(quantity)
+  end
 
   def self.most_revenue(quantity)
     Item

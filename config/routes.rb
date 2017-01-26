@@ -4,15 +4,15 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       namespace :merchants do
-        get 'find',           to: 'query#show'
-        get 'find_all',       to: 'query#index'
-        get 'random',         to: 'random#show'
-        get ':id/items',      to: 'items#index'
-        get ':id/invoices',   to: 'invoices#index'
-        get 'most_revenue',   to: 'most_revenue#index'
-        get ':id/revenue',    to: 'revenue#show'
-        get 'revenue',        to: 'revenue#index'
-        get 'most_items',     to: 'most_items#index'
+        get 'find',                   to: 'query#show'
+        get 'find_all',               to: 'query#index'
+        get 'random',                 to: 'random#show'
+        get ':id/items',              to: 'items#index'
+        get ':id/invoices',           to: 'invoices#index'
+        get 'most_revenue',           to: 'most_revenue#index'
+        get ':id/revenue',            to: 'revenue#show'
+        get 'revenue',                to: 'revenue#index'
+        get 'most_items',             to: 'most_items#index'
         get ':id/favorite_customer',  to: 'favorite_customer#show'
       end
       resources :merchants, only: [:index, :show]
@@ -53,11 +53,8 @@ Rails.application.routes.draw do
         get 'random',            to: 'random#show'
         get ':id/invoice_items', to: 'invoice_items#index'
         get ':id/merchant',      to: 'merchant#show'
-<<<<<<< HEAD
         get 'most_items',        to: 'most_items#index'
-=======
         get 'most_revenue',      to: 'most_revenue#index'
->>>>>>> 38974156f2573cb1c5dfb406275d6182e17dea20
       end
       resources :items, only: [:index, :show]
 

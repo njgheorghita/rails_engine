@@ -49,7 +49,7 @@ describe 'Merchants Business Intelligence API' do
 
     expect(response).to be_success
     expect(merchant_revenue).to be_a(Hash)
-    expect(merchant_revenue["revenue"]).to eq(3750)
+    expect(merchant_revenue["revenue"]).to eq("37.50")
   end
 
   it 'returns the top "x" merchants ranked by total number of items sold' do
@@ -65,10 +65,11 @@ describe 'Merchants Business Intelligence API' do
     expect(top_merchants_return.second["id"]).to eq(@merchant_2.id)
   end
 
-  it 'returns the total revenue for date "x" across all merchants' do
+  it 'returns the total revenue for date "x" for one merchant' do
     date = "2012-03-25 09:54:09"
+    merchant_id = @merchant_1.id
 
-    get "/api/v1/merchants/revenue?date=#{date}"
+    get "/api/v1/merchants/#{merchant_id}/revenue?date=#{date}"
     total_revenue_return = JSON.parse(response.body)
 
     expect(response).to be_success
@@ -77,7 +78,7 @@ describe 'Merchants Business Intelligence API' do
   end
 
   it 'returns the total revenue for all merchants for a day' do
-    date = "2012-03-25 09:54:09 UTC"
+    date = "2012-03-25 09:54:09"
 
     get "/api/v1/merchants/revenue?date=#{date}"
 
@@ -85,7 +86,7 @@ describe 'Merchants Business Intelligence API' do
 
     expect(response).to be_success
     expect(revenue_returned).to be_a(Hash)
-    expect(revenue_returned["revenue"]).to eq(33750)
+    expect(revenue_returned["revenue"]).to eq("1057.50")
   end
 
   it 'returns a merchants favorite customer' do

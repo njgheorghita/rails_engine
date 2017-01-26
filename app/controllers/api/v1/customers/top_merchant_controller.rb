@@ -1,7 +1,7 @@
-class Api::V1::Customers::TopMerchantsController < ApplicationController
+class Api::V1::Customers::TopMerchantController < ApplicationController
 
   def show
-    render json: Customer.find(params["id"]).favorite_merchant
+    render json: Customer.find(params["id"]).favorite_merchant, serializer: TopMerchantSerializer
   end
 
 end

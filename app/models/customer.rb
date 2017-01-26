@@ -9,14 +9,8 @@ class Customer < ApplicationRecord
     Customer.order("RANDOM()").first
   end
 
-  # def favorite_merchant
-  #   merchants
-  #   .select("merchants.*, count(invoices.merchant_id) as invoice_count")
-  #   .joins(:transactions)
-  #   .where(transactions:{result: 'success'})
-  #   .group(:id)
-  #   .order("invoice_count desc")
-  #   .first
-  # end
+  def favorite_merchant
+    self.invoices.select("count(invoices.merchant_id) as transaction_count, invoices.merchant_id, merchants.name").joins(:transactions, :merchants).merge(Transaction.successful).group("invoices.merchant_id, merchants.name").order("transaction_count desc").limit(1)
+  end
 
 end

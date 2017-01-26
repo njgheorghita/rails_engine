@@ -10,13 +10,13 @@ describe 'Items Business Intelligence API' do
     invoice_2 = Invoice.create(customer_id:2, merchant_id: @merchant_2.id, status:"shipped", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     invoice_3 = Invoice.create(customer_id:3, merchant_id: @merchant_3.id, status:"shipped", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
-    item_1 = Item.create(name: "awesome", description: "thing", unit_price:1250, merchant_id: @merchant_1.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    item_2 = Item.create(name: "cooling", description: "swing", unit_price:5000, merchant_id: @merchant_2.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    item_3 = Item.create(name: "raptors", description: "shirt", unit_price:8000, merchant_id: @merchant_3.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    @item_1 = Item.create(name: "awesome", description: "thing", unit_price:1250, merchant_id: @merchant_1.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    @item_2 = Item.create(name: "cooling", description: "swing", unit_price:5000, merchant_id: @merchant_2.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    @item_3 = Item.create(name: "raptors", description: "shirt", unit_price:8000, merchant_id: @merchant_3.id, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
-    invoice_item_1 = InvoiceItem.create(item_id: item_1.id, invoice_id: invoice_1.id, quantity: 3, unit_price:1250, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    invoice_item_2 = InvoiceItem.create(item_id: item_2.id, invoice_id: invoice_2.id, quantity: 6, unit_price:5000, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
-    invoice_item_3 = InvoiceItem.create(item_id: item_3.id, invoice_id: invoice_3.id, quantity: 9, unit_price:8000, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    invoice_item_1 = InvoiceItem.create(item_id: @item_1.id, invoice_id: invoice_1.id, quantity: 3, unit_price:1250, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    invoice_item_2 = InvoiceItem.create(item_id: @item_2.id, invoice_id: invoice_2.id, quantity: 6, unit_price:5000, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    invoice_item_3 = InvoiceItem.create(item_id: @item_3.id, invoice_id: invoice_3.id, quantity: 9, unit_price:8000, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
     transaction_1 = Transaction.create(invoice_id: invoice_1.id, credit_card_number:"999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     transaction_2 = Transaction.create(invoice_id: invoice_2.id, credit_card_number:"999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
@@ -42,7 +42,7 @@ describe 'Items Business Intelligence API' do
     get "/api/v1/items/most_items?quantity=#{quantity}"
 
     top_items_return = JSON.parse(response.body)
-    byebug
+    
     expect(response).to be_success
     expect(top_items_return).to be_a(Array)
     expect(top_items_return.first["id"]).to eq(@item_3.id)
