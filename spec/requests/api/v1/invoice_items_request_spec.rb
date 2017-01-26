@@ -69,4 +69,32 @@ describe "Invoice Items API" do
     expect(invoice_item_ids).to include(invoice_item["id"])
   end
 
+  it "returns the invoice associated with a single invoice item" do
+    invoice = Invoice.create(customer_id: 5, merchant_id: 15, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    item = Item.create(name: "awesome", description: "thing", unit_price:22, merchant_id: 15, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    invoice_item = InvoiceItem.create(item_id: item.id, invoice_id: invoice.id, quantity: 9, unit_price:533, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/invoice_items/#{invoice_item.id}/invoice.json"
+
+    invoice_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoice_return).to be_a(Hash)
+    expect(invoice_return["id"]).to eq(invoice.id)
+  end
+
+  it "returns the item associated with a single invoice item" do
+    invoice = Invoice.create(customer_id: 5, merchant_id: 15, status:"hello", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    item = Item.create(name: "awesome", description: "thing", unit_price:22, merchant_id: 15, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+    invoice_item = InvoiceItem.create(item_id: item.id, invoice_id: invoice.id, quantity: 9, unit_price:533, created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
+
+    get "/api/v1/invoice_items/#{invoice_item.id}/item.json"
+
+    item_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(item_return).to be_a(Hash)
+    expect(item_return["id"]).to eq(item.id)
+  end
+
 end
