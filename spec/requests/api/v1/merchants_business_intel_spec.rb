@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe 'Merchants Business Intelligence API' do 
-  before(:each) do 
+describe 'Merchants Business Intelligence API' do
+  before(:each) do
     @merchant_1 = Merchant.create(name:'first', created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     @merchant_2 = Merchant.create(name:'second', created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     @merchant_3 = Merchant.create(name:'third', created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
@@ -23,9 +23,9 @@ describe 'Merchants Business Intelligence API' do
     transaction_3 = Transaction.create(invoice_id: invoice_3.id, credit_card_number:"999", credit_card_expiration_date: "", result: "success", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
   end
 
-  it 'returns the top "x" merchants ranked by total revenue' do 
+  it 'returns the top "x" merchants ranked by total revenue' do
     quantity = 2
-    
+
     get "/api/v1/merchants/most_revenue?quantity=#{quantity}"
 
     top_merchants_return = JSON.parse(response.body)
@@ -43,9 +43,34 @@ describe 'Merchants Business Intelligence API' do
     get "/api/v1/merchants/#{current_merchant_id}/revenue"
 
     merchant_revenue = JSON.parse(response.body)
-    
+
     expect(response).to be_success
     expect(merchant_revenue).to be_a(Hash)
     expect(merchant_revenue["revenue"]).to eq(3750)
   end
+
+  it 'returns the top "x" merchants ranked by total number of items sold' do
+    quantity = 2
+
+    get "/api/v1/merchants/most_items?quantity=#{quantity}"
+
+    top_merchants_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(top_merchants_return).to be_a(Array)
+    expect(top_merchants_return.first["id"]).to eq(@merchant_3.id)
+    expect(top_merchants_return.second["id"]).to eq(@merchant_2.id)
+  end
+
+  it 'returns the total revenue for date "x" across all merchants' do
+    date = "2012-03-25 09:54:09"
+
+    get "/api/v1/merchants/revenue?date=#{date}"
+    total_revenue_return = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(total_revenue_return).to be_a(Hash)
+    expect(total_revenue_return["total_revenue"]).to eq(105750)
+  end
+
 end
