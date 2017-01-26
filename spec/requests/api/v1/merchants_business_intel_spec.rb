@@ -62,16 +62,15 @@ describe 'Merchants Business Intelligence API' do
     expect(top_merchants_return.second["id"]).to eq(@merchant_2.id)
   end
 
-  xit 'returns the total revenue for date "x" across all merchants' do
+  it 'returns the total revenue for date "x" across all merchants' do
     date = "2012-03-25 09:54:09"
 
     get "/api/v1/merchants/revenue?date=#{date}"
-
     total_revenue_return = JSON.parse(response.body)
 
     expect(response).to be_success
     expect(total_revenue_return).to be_a(Hash)
-    expect(total_revenue_return).to eq(105750)
+    expect(total_revenue_return["total_revenue"]).to eq(105750)
   end
 
 end
