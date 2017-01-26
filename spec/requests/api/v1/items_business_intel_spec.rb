@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe 'Items Business Intelligence API' do 
-  before(:each) do 
+describe 'Items Business Intelligence API' do
+  before(:each) do
     @merchant_1 = Merchant.create(name:'first', created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     @merchant_2 = Merchant.create(name:'second', created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
     @merchant_3 = Merchant.create(name:'third', created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
@@ -23,7 +23,7 @@ describe 'Items Business Intelligence API' do
     transaction_3 = Transaction.create(invoice_id: invoice_3.id, credit_card_number:"999", credit_card_expiration_date: "", result: "success", created_at: "2012-04-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
   end
 
-  it 'returns the top "x" items ranked by total revenue generated' do 
+  it 'returns the top "x" items ranked by total revenue generated' do
     quantity = 2
 
     get "/api/v1/items/most_revenue?quantity=#{quantity}"
@@ -35,4 +35,18 @@ describe 'Items Business Intelligence API' do
     expect(items_returned.first["name"]).to eq("raptors")
     expect(items_returned.second["name"]).to eq("cooling")
   end
+
+  it 'returns the top "x" items ranked by total number of items sold' do
+    quantity = 2
+
+    get "/api/v1/items/most_items?quantity=#{quantity}"
+
+    top_items_return = JSON.parse(response.body)
+    byebug
+    expect(response).to be_success
+    expect(top_items_return).to be_a(Array)
+    expect(top_items_return.first["id"]).to eq(@item_3.id)
+    expect(top_items_return.second["id"]).to eq(@item_2.id)
+  end
+
 end

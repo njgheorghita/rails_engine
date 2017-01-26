@@ -3,7 +3,7 @@ class Merchant < ApplicationRecord
   has_many :customers, through: :invoices
   has_many :invoices
   has_many :items
-  
+
   def self.random
     Merchant.order("RANDOM()").first
   end
@@ -27,6 +27,32 @@ class Merchant < ApplicationRecord
       .sum("invoice_items.unit_price * invoice_items.quantity")
   end
 
+  def self.total_merchant_revenue_by_date(date)
+    Merchant
+      .joins(invoices: [:invoice_items, :transactions])
+      .where(invoices: {created_at: date})
+      .where(transactions:{result: "success"})
+      .sum("invoice_items.unit_price * invoice_items.quantity")
+  end
+
+  def self.top_merchants_by_items_sold(quantity)
+    Merchant
+      .select("sum(invoice_items.quantity) as total_items_sold, merchants.id, merchants.name")
+      .joins(invoices: [:invoice_items, :transactions])
+      .where(transactions: {result: "success"})
+      .group("merchants.id, merchants.name")
+      .order("total_items_sold desc")
+      .limit(quantity)
+  end
+
+  # def favorite_customer
+  #   customers.select("customers.*, count(invoices.customer_id) as invoice_count")
+  #     .joins(:transactions)
+  #     .merge(Transaction.successful)
+  #     .group(:id)
+  #     .order("invoice_count desc").first
+  # end
+
   def self.revenue_by_date(date)
     date += " UTC"
     Merchant.joins(invoices: [:invoice_items, :transactions])
@@ -45,7 +71,7 @@ class Merchant < ApplicationRecord
 
     #   .group(:customer_id)
     #   .count
-   
+
     # Merchant
     #   .select("count(invoices.customer_id) as customer_transactions")
     #   .joins(invoices: :transactions)

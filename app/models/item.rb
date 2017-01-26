@@ -8,6 +8,15 @@ class Item < ApplicationRecord
     Item.order("RANDOM()").first
   end
 
+  def self.top_items_by_items_sold(quantity)
+    Item
+    .select("items.*, sum(invoice_items.quantity) as total_items_sold")
+    .joins(invoices: [:invoice_items, :transactions])
+    .where(transactions: {result: "success"})
+    .group("items.id, items.name")
+    .order("total_items_sold desc")
+    .limit(quantity)
+
   def self.most_revenue(quantity)
     Item
       .select("sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue, items.id, items.name")

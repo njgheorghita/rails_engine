@@ -1,7 +1,11 @@
 class Api::V1::Merchants::RevenueController < ApplicationController
 
   def show
-    render json: {"revenue" => Merchant.revenue(params[:id])}, serializer: RevenueSerializer
+    if params[:date]
+      render json: {"revenue" => Merchant.find(params[:id]).individual_revenue_by_date(params[:date])}, serializer: RevenueSerializer
+    else
+      render json: {"revenue" => Merchant.revenue(params[:id])}, serializer: RevenueSerializer
+    end
   end
 
   def index
