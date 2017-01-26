@@ -28,8 +28,11 @@ class Merchant < ApplicationRecord
   end
 
   def self.revenue_by_date(date)
-    byebug
-    Merchant.joins(invoices: [:invoice_items, :transactions]).merge(Transaction.successful).where("transactions.created_at = ?", date).sum("invoice_items.quantity * invoice_items.unit_price")
+    date += " UTC"
+    Merchant.joins(invoices: [:invoice_items, :transactions])
+    .merge(Transaction.successful)
+    .where("invoices.created_at = ?", date)
+    .sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
   def favorite_customer
