@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         get ':id/invoices',   to: 'invoices#index'
         get 'most_revenue',   to: 'most_revenue#index'
         get ':id/revenue',    to: 'revenue#show'
+        get 'revenue',        to: 'revenue#index'
       end
       resources :merchants, only: [:index, :show]
 
@@ -49,6 +50,7 @@ Rails.application.routes.draw do
         get 'random',            to: 'random#show'
         get ':id/invoice_items', to: 'invoice_items#index'
         get ':id/merchant',      to: 'merchant#show'
+        get 'most_revenue',      to: 'most_revenue#index'
       end
       resources :items, only: [:index, :show]
 
