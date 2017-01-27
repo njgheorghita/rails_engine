@@ -107,6 +107,7 @@ describe 'Merchants Business Intelligence API' do
 
     expect(response).to be_success
     expect(customer_returned).to be_a(Hash)
-    expect(customer_returned["first_name"]).to eq(@customer_1.first_name)
+    
+    expect(customer_returned["id"]).to eq(@customer_1.id)
   end
 end
