@@ -9,13 +9,11 @@ class Item < ApplicationRecord
   end
 
   def self.top_items_by_items_sold(quantity)
-    Item
-    .select("items.*, sum(invoice_items.quantity) as total_items_sold")
-    .joins(invoices: [:invoice_items, :transactions])
-    .where(transactions: {result: "success"})
-    .group("items.id, items.name")
-    .order("total_items_sold desc")
-    .limit(quantity)
+    joins(invoices: :transactions)
+    .where("transactions.result = 'success'")
+    .group(:id)
+    .order("sum(invoice_items.quantity) desc")
+    .first(quantity)
   end
 
   def self.most_revenue(quantity)
@@ -30,11 +28,11 @@ class Item < ApplicationRecord
 
   def best_day
     invoices
-      .joins(:invoice_items, :transactions)
-      .merge(Transaction.successful)
-      .order("invoice_items.quantity desc, invoices.created_at desc")
-      .first
-      .created_at
+      .joins(:transactions)
+      .where(transactions: {result: "success"})
+      .group('"invoices"."created_at"')
+      .sum("quantity * unit_price")
+      .first[0]
   end
 
 end

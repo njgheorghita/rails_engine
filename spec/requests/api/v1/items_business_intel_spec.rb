@@ -42,22 +42,24 @@ describe 'Items Business Intelligence API' do
     get "/api/v1/items/most_items?quantity=#{quantity}"
 
     top_items_return = JSON.parse(response.body)
-
+    # byebug
     expect(response).to be_success
     expect(top_items_return).to be_a(Array)
     expect(top_items_return.first["id"]).to eq(@item_3.id)
     expect(top_items_return.second["id"]).to eq(@item_2.id)
   end
 
-  xit 'returns the date with the most sales for the given item using the invoice date' do
+  it 'returns the date with the most sales for the given item using the invoice date' do
 
     get "/api/v1/items/#{@item_1.id}/best_day"
 
     top_sales_date_return = JSON.parse(response.body)
 
-    expect(response).to be_success
-    expect(top_sales_date_return).to be_a(Array)
+    expected_date = invoice_3.created_at.to_i
+    actual_date = DateTime.parse(date["best_day"]).to_i
 
+    expect(date).to be_instance_of(Hash)
+    expect(actual_date).to eq(expected_date)
   end
 
 end
