@@ -32,7 +32,7 @@ class Item < ApplicationRecord
       .where(transactions: {result: "success"})
       .group('"invoices"."created_at"')
       .sum("quantity * unit_price")
-      .first[0]
+      .first
   end
 
 end
