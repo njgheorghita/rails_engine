@@ -1,10 +1,11 @@
 class Api::V1::Items::QueryController < ApplicationController
-  def show
-    render json: Item.find_by(adjusted_item_params)
-  end
 
   def index
     render json: Item.where(item_params)
+  end
+
+  def show
+    render json: Item.find_by(adjusted_item_params)
   end
 
   private
