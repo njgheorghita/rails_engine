@@ -3,14 +3,19 @@ class Customer < ApplicationRecord
   has_many :invoices
   has_many :merchants, through: :invoices
   has_many :transactions, through: :invoices
-  has_many :merchants, through: :invoices
 
   def self.random
     Customer.order("RANDOM()").first
   end
 
-  # def favorite_merchant
-  #   self.invoices.select("count(invoices.merchant_id) as transaction_count, invoices.merchant_id, merchants.name").joins(:transactions, :merchants).merge(Transaction.successful).group("invoices.merchant_id, merchants.name").order("transaction_count desc").limit(1)
-  # end
+  def favorite_merchant(customer_id)
+    Merchant
+      .select("merchants.id, merchants.name")
+      .joins(invoices: :transactions)
+      .where("invoices.customer_id = ?", customer_id)
+      .group("merchants.id")
+      .order("count(invoices.merchant_id) desc")
+      .first
+  end
 
 end

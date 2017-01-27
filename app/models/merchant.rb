@@ -54,34 +54,18 @@ class Merchant < ApplicationRecord
     .sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
-  # def favorite_customer
-  #   customers.select("customers.*, count(invoices.customer_id) as invoice_count")
-  #     .joins(:transactions)
-  #     .merge(Transaction.successful)
-  #     .group(:id)
-  #     .order("invoice_count desc").first
-  # end
-
   def favorite_customer
-    var = 1
-    # Merchant
-    #   .find(merchant_id)
-    #   .invoices
-    #   .joins(:transactions)
-    #   .where(transactions:{result:"success"})
+    self
+      .invoices
+      .select("count(invoices.customer_id) as transaction_count, invoices.customer_id")
+      .joins(:transactions, :customers)
+      .merge(Transaction.successful)
+      .group("invoices.customer_id")
+      .order("transaction_count desc")
+      .limit(1)
+  end
 
-    #   .group(:customer_id)
-    #   .count
-
-    # Merchant
-    #   .select("count(invoices.customer_id) as customer_transactions")
-    #   .joins(invoices: :transactions)
-    #   .where(transactions:{result:"success"})
-    #   .where("invoices.merchant_id = ?", merchant_id)
-
-    #   works till here
-
-    #   .group("")
-    #   .limit(1)
+  def self.favorite_merchant(customer_id)
+    Merchant.select("merchants.id, merchants.name").joins(invoices: :transactions).merge(Transaction.successful).where("invoices.customer_id = ?", customer_id).group("merchants.id").order("count(invoices.merchant_id) desc").first
   end
 end
