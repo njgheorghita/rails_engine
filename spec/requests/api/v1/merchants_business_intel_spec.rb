@@ -70,11 +70,12 @@ describe 'Merchants Business Intelligence API' do
     merchant_id = @merchant_1.id
 
     get "/api/v1/merchants/#{merchant_id}/revenue?date=#{date}"
+
     total_revenue_return = JSON.parse(response.body)
 
     expect(response).to be_success
     expect(total_revenue_return).to be_a(Hash)
-    expect(total_revenue_return["total_revenue"]).to eq(105750)
+    expect(total_revenue_return["revenue"]).to eq("37.50")
   end
 
   it 'returns the total revenue for all merchants for a day' do
@@ -86,7 +87,7 @@ describe 'Merchants Business Intelligence API' do
 
     expect(response).to be_success
     expect(revenue_returned).to be_a(Hash)
-    expect(revenue_returned["revenue"]).to eq("1057.50")
+    expect(revenue_returned["total_revenue"]).to eq("1057.50")
   end
 
   it 'returns a merchants favorite customer' do

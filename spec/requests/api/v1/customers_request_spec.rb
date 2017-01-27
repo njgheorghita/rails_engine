@@ -199,7 +199,7 @@ describe "Customers API" do
     expect(customers_ids).to include(customer["id"])
   end
 
-  xit "searches case insensitively" do
+  it "searches case insensitively" do
     customer = Customer.create(first_name:"Georgy", last_name:"Porgy", created_at: "2012-03-25 09:54:09 UTC", updated_at: "2013-03-25 09:54:09 UTC")
 
     get "/api/v1/customers/find?name=GEORGY"

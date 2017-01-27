@@ -56,8 +56,7 @@ describe 'Items Business Intelligence API' do
     top_sales_date_return = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(top_sales_date_return).to be_a(Array)
-
+    expect(date).to be_instance_of(Hash)
   end
 
 end
