@@ -28,4 +28,12 @@ class Item < ApplicationRecord
       .limit(quantity)
   end
 
+  def best_day
+    invoices
+      .joins(:invoice_items)
+      .order("invoice_items.quantity desc, invoices.created_at desc")
+      .first
+      .created_at
+  end
+
 end
