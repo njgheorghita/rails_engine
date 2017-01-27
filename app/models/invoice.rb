@@ -10,10 +10,4 @@ class Invoice < ApplicationRecord
     Invoice.order("RANDOM()").first
   end
 
-  def self.favorite_customer 
-    hi = 3
-    # find most common customer_id
-    # merge with successful transactions
-  end
-
 end
