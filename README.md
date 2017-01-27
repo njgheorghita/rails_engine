@@ -1,6 +1,6 @@
 # Rails Engine
 
-Rails Engine is a project using Rails and ActiveRecord to build a JSON API. The API is used to expose the SalesEngine data schema.
+Rails (Rales?) Engine is a project using Rails and ActiveRecord to build a JSON API. The API is used to expose the SalesEngine data schema.
 
 This project was assigned week 1 of Module 3  at Turing. The stated **learning goals** are as follows:
 
@@ -14,31 +14,35 @@ The original project spec can be found [here](http://backend.turing.io/module3/p
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
 ### Installing
 
 A step by step series of examples that tell you have to get a development env running
 
-Say what the step will be
+Clone the project
 
 ```
-Give the example
+$ git clone https://github.com/njgheorghita/rails_engine.git
 ```
 
-And repeat
+Run Bundler to install all dependencies specified in the project Gemfile
 
 ```
-until finished
+$ bundle install
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Setup the test and development databases and add seed data
+
+```
+$ rake db:create
+$ rake db:migrate
+$ rake db:seed
+```
+
+Start the Rails server to access the API endpoints from localhost.
+
+```
+$ rails s
+```
 
 ## Running the tests
 
@@ -48,7 +52,10 @@ To run the test suite, run rspec from the project root directory:
 $ path/to/project/root rspec
 ```
 
-## Project Group Members
+To run the spec harness, use the instructions found [here](https://github.com/turingschool/rales_engine_spec_harness). Make sure to start the Rails server before running the tests.
+
+
+## Contributors
 
 * [Nick Gheorghita](https://github.com/njgheorghita)
 * [Molly Brown](https://github.com/mollybrown)
