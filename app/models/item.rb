@@ -30,7 +30,8 @@ class Item < ApplicationRecord
 
   def best_day
     invoices
-      .joins(:invoice_items)
+      .joins(:invoice_items, :transactions)
+      .merge(Transaction.successful)
       .order("invoice_items.quantity desc, invoices.created_at desc")
       .first
       .created_at

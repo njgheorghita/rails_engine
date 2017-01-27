@@ -5,8 +5,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    render json: Item.find(params[:id])
+    render json: Item.find(adjusted_params)
   end
-
 
 end
